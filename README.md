@@ -16,7 +16,7 @@ It is compatible with all platforms.
 ### For Mac, Linux, Windows:
 
 1. Install Python3.
-2. Download [MiUnlockTool](https://codeload.github.com/offici5l/MiUnlockTool/zip/refs/heads/main) and run it.
+2. Download [MiUnlockTool](https://codeload.github.com/offici5l/MiUnlockTool/zip/refs/heads/stable) and run it.
 
 ### For Android:
 
@@ -29,7 +29,7 @@ It is compatible with all platforms.
 termux-setup-storage
 ```
 ```bash
-curl https://raw.githubusercontent.com/offici5l/MiUnlockTool/main/.install | bash
+curl https://raw.githubusercontent.com/offici5l/MiUnlockTool/stable/.install | bash
 ```
 
 <div align="center">
