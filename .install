@@ -31,6 +31,6 @@ if ! python3 -c "import requests" &>/dev/null; then
 fi
 
 printf "\n\n\n\033[32mupdate MiUnlockTool...\033[0m\n\n\n"
-curl "https://raw.githubusercontent.com/offici5l/MiUnlockTool/main/MiUnlockTool.py" -o "$PREFIX/bin/miunlock" && chmod +x "$PREFIX/bin/miunlock"
+curl "https://raw.githubusercontent.com/offici5l/MiUnlockTool/Atest/MiUnlockTool.py" -o "$PREFIX/bin/miunlock" && chmod +x "$PREFIX/bin/miunlock"
 
 printf "\n\n\nuse command: \e[1;32mmiunlock\e[0m\n"
