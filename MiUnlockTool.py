@@ -175,11 +175,18 @@ if "token" not in data:
     data["token"] = t
     save(data, datafile, name="token")
 
-user, pwd, wb_id, product, token = (data.get(key, "") for key in ["user", "pwd", "wb_id", "product", "token"])
+if "serialno" not in data:
+    p = CheckB(cmd, "serialno", "getvar", "serialno")
+    if not p:
+        p = input("\nFailed to obtain the deviceSerialno. Please enter it manually: ")
+    data["serialno"] = p
+    save(data, datafile, name="serialno")
+
+user, pwd, wb_id, product, token, serialno = (data.get(key, "") for key in ["user", "pwd", "wb_id", "product", "token", "serialno"])
 
 datav = data
 
-print(f"\nDeviceInfo:\nproduct: \033[92m{product}\033[0m\ntoken: \033[92m{token}\033[0m\n")
+print(f"\nDeviceInfo:\nproduct: \033[92m{product}\033[0m\ntoken: \033[92m{token}\033[0m\nserialno: \033[92m{serialno}\033[0m\n")
 
 session = requests.Session()
 headers = {"User-Agent": "XiaomiPCSuite"}
@@ -246,13 +253,14 @@ print(p_)
 r = RetrieveEncryptData("/api/v3/ahaUnlock", {"appId":"1", "data":{"clientId":"2", "clientVersion":"7.6.727.43", "language":"en", "operate":"unlock", "pcId":hashlib.md5(wb_id.encode("utf-8")).hexdigest(), "product":product, "region":"","deviceInfo":{"boardVersion":"","product":product, "socId":"","deviceName":""}, "deviceToken":token}}).add_nonce().run()
 
 if "code" in r and r["code"] == 0:
-    ed = io.BytesIO(bytes.fromhex(r["encryptData"]))
-    with open("encryptData", "wb") as edfile:
-        edfile.write(ed.getvalue())
     CheckB(cmd, "product", "getvar", "product")
     input("\n\033[1;31mNotice\033[0m: Unlocking the bootloader will wipe all data\n\nPress Enter to unlock bootloader\n")
-    os.system(f"{cmd} stage encryptData")
-    os.system(f"{cmd} oem unlock")
+    UNLOCK_TOKEN_CACHE = {}
+    encryptData = r["encryptData"]
+    UNLOCK_TOKEN_CACHE["token"] = encryptData
+    tokenunlock = UNLOCK_TOKEN_CACHE.get("token")
+    fastboot_command = [cmd, "-s", serialno, "oem", "unlock", tokenunlock]
+    subprocess.run(fastboot_command)
 elif "code" in r and r["code"] == 10000:
     remove("product", "token")
     sys.exit()
